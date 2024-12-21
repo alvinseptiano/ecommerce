@@ -11,15 +11,10 @@ class CustomerAddress extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['type', 'address1', 'address2', 'city', 'state', 'zipcode', 'country_code', 'customer_id'];
+    protected $fillable = ['address', 'user_id'];
 
     public function customer(): BelongsTo
     {
         return $this->belongsTo(Customer::class);
-    }
-
-    public function country(): BelongsTo
-    {
-        return $this->belongsTo(Country::class, 'country_code', 'code');
     }
 }

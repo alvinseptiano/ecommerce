@@ -3,7 +3,7 @@
     <form @submit.prevent="onSubmit">
       <div class="bg-white px-4 pt-5 pb-4">
         <h1 class="text-2xl font-semibold pb-2">{{ title }}</h1>
-        <CustomInput class="mb-2" v-model="customer.first_name" label="First Name" :errors="errors.first_name"/>
+        <CustomInput class="mb-2" v-model="customer.name" label="First Name" :errors="errors.name"/>
         <CustomInput class="mb-2" v-model="customer.last_name" label="Last Name" :errors="errors.last_name"/>
         <CustomInput class="mb-2" v-model="customer.email" label="Email" :errors="errors.email"/>
         <CustomInput class="mb-2" v-model="customer.phone" label="Phone" :errors="errors.phone"/>
@@ -15,8 +15,7 @@
             <h2 class="text-xl font-semibold mt-6 pb-2 border-b border-gray-300">Billing Address</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <CustomInput v-model="customer.billingAddress.address1" label="Address 1" :errors="errors['billingAddress.address1']"/>
-              <CustomInput v-model="customer.billingAddress.address2" label="Address 2" :errors="errors['billingAddress.address2']"/>
+              <CustomInput v-model="customer.billingAddress.address" label="Address 1" :errors="errors['billingAddress.address']"/>
               <CustomInput v-model="customer.billingAddress.city" label="City" :errors="errors['billingAddress.city']"/>
               <CustomInput v-model="customer.billingAddress.zipcode" label="Zip Code" :errors="errors['billingAddress.zipcode']"/>
 
@@ -32,22 +31,20 @@
             <h2 class="text-xl font-semibold mt-6 pb-2 border-b border-gray-300">Shipping Address</h2>
 
             <div class="grid grid-cols-1 md:grid-cols-2 gap-2">
-              <CustomInput v-model="customer.shippingAddress.address1" label="Address 1"
-                           :errors="errors['shippingAddress.address1']"/>
-              <CustomInput v-model="customer.shippingAddress.address2" label="Address 2"
-                           :errors="errors['shippingAddress.address2']"/>
-              <CustomInput v-model="customer.shippingAddress.city" label="City"
-                           :errors="errors['shippingAddress.city']"/>
-              <CustomInput v-model="customer.shippingAddress.zipcode" label="Zip Code"
-                           :errors="errors['shippingAddress.zipcode']"/>
-              <CustomInput type="select" :select-options="countries" v-model="customer.shippingAddress.country_code"
+              <CustomInput v-model="customer.address.address" label="Address 1"
+                           :errors="errors['address.address']"/>
+              <CustomInput v-model="customer.address.city" label="City"
+                           :errors="errors['address.city']"/>
+              <CustomInput v-model="customer.address.zipcode" label="Zip Code"
+                           :errors="errors['address.zipcode']"/>
+              <CustomInput type="select" :select-options="countries" v-model="customer.address.country_code"
                            label="Country"
-                           :errors="errors['shippingAddress.country_code']"/>
-              <CustomInput v-if="shippingCountry && !shippingCountry.states" v-model="customer.shippingAddress.state" label="State"
-                           :errors="errors['shippingAddress.state']"/>
+                           :errors="errors['address.country_code']"/>
+              <CustomInput v-if="shippingCountry && !shippingCountry.states" v-model="customer.address.state" label="State"
+                           :errors="errors['address.state']"/>
               <CustomInput v-else type="select" :select-options="shippingStateOptions"
-                           v-model="customer.shippingAddress.state" label="State"
-                           :errors="errors['shippingAddress.state']"/>
+                           v-model="customer.address.state" label="State"
+                           :errors="errors['address.state']"/>
             </div>
           </div>
         </div>
@@ -81,27 +78,25 @@ const route = useRoute()
 
 const title = ref('');
 const errors = ref({
-  first_name: [],
+  name: [],
   last_name: [],
   email: [],
   phone: [],
   status: [],
-  'billingAddress.address1': [],
-  'billingAddress.address2': [],
+  'billingAddress.address': [],
   'billingAddress.city': [],
   'billingAddress.zipcode': [],
   'billingAddress.country_code': [],
   'billingAddress.state': [],
-  'shippingAddress.address1': [],
-  'shippingAddress.address2': [],
-  'shippingAddress.city': [],
-  'shippingAddress.zipcode': [],
-  'shippingAddress.country_code': [],
-  'shippingAddress.state': [],
+  'address.address': [],
+  'address.city': [],
+  'address.zipcode': [],
+  'address.country_code': [],
+  'address.state': [],
 });
 const customer = ref({
   billingAddress: {},
-  shippingAddress: {}
+  address: {}
 })
 const loading = ref(false)
 
@@ -112,7 +107,7 @@ const billingStateOptions = computed(() => {
 
   return Object.entries(billingCountry.value.states).map(c => ({key: c[0], text: c[1]}))
 })
-const shippingCountry = computed(() => store.state.countries.find(c => c.code === customer.value.shippingAddress.country_code))
+const shippingCountry = computed(() => store.state.countries.find(c => c.code === customer.value.address.country_code))
 const shippingStateOptions = computed(() => {
   if (!shippingCountry.value || !shippingCountry.value.states) return [];
 
@@ -156,7 +151,7 @@ function onSubmit() {
 onMounted(() => {
   store.dispatch('getCustomer', route.params.id)
     .then(({data}) => {
-      title.value = `Update customer: "${data.first_name} ${data.last_name}"`
+      title.value = `Update customer: "${data.name} ${data.last_name}"`
       customer.value = data
     })
 })

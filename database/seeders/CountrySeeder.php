@@ -25,6 +25,7 @@ class CountrySeeder extends Seeder
             "CA" => 'California',
         ];
         $countries = [
+            ['code' => 'ina', 'name' => 'Indonesia', 'states' => null],
             ['code' => 'geo', 'name' => 'Georgia', 'states' => null],
             ['code' => 'ind', 'name' => 'India', 'states' => null],
             ['code' => 'usa', 'name' => 'United States of America', 'states' => json_encode($usaStates)],

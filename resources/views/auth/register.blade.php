@@ -18,7 +18,7 @@
         </p>
 
         @if (session('error'))
-            <div class="py-2 px-3 bg-red-500 text-white mb-2 rounded">
+            <div class="py-2 px-3 bg-error text-white mb-2 rounded">
                 {{ session('error') }}
             </div>
         @endif

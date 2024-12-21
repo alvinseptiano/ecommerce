@@ -1,7 +1,7 @@
 <template>
   <GuestLayout title="Sign in to your account">
     <form class="mt-8 space-y-6" method="POST" @submit.prevent="login">
-      <div v-if="errorMsg" class="flex items-center justify-between py-3 px-5 bg-red-500 text-white rounded">
+      <div v-if="errorMsg" class="flex items-center justify-between py-3 px-5 bg-error text-white rounded">
         {{ errorMsg }}
         <span @click="errorMsg = ''"
           class="w-8 h-8 flex items-center justify-center rounded-full transition-colors cursor-pointer hover:bg-[rgba(0,0,0,0.2)]">
@@ -35,7 +35,8 @@
         </div>
 
         <div class="text-sm">
-          <router-link :to="{ name: 'requestPassword' }" class="font-medium text-indigo-600 hover:text-indigo-500"> Forgot
+          <router-link :to="{ name: 'requestPassword' }" class="font-medium text-indigo-600 hover:text-indigo-500">
+            Forgot
             your password?
           </router-link>
         </div>

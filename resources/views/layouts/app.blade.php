@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="cupcake">
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}" data-theme="nord">
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -18,7 +18,7 @@
 <body>
 @include('layouts.navigation')
 
-<main class="p-5">
+<main class="p-5 min-h-screen">
     {{ $slot }}
 </main>
 
@@ -30,7 +30,7 @@
     x-cloak
     @notify.window="show($event.detail.message, $event.detail.type || 'success')"
     class="fixed w-[400px] left-1/2 -ml-[200px] top-16 py-2 px-4 pb-4 text-white"
-    :class="type === 'success' ? 'bg-emerald-500' : 'bg-red-500'"
+    :class="type === 'success' ? 'bg-emerald-500' : 'bg-error'"
 >
     <div class="font-semibold" x-text="message"></div>
     <button

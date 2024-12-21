@@ -35,7 +35,7 @@ class CustomerController extends Controller
             ->orderBy("customers.$sortField", $sortDirection);
         if ($search) {
             $query
-                ->where(DB::raw("CONCAT(first_name, ' ', last_name)"), 'like', "%{$search}%")
+                ->where(DB::raw("CONCAT(name, ' ', last_name)"), 'like', "%{$search}%")
                 ->join('users', 'customers.user_id', '=', 'users.id')
                 ->orWhere('users.email', 'like', "%{$search}%")
                 ->orWhere('customers.phone', 'like', "%{$search}%");
@@ -69,26 +69,24 @@ class CustomerController extends Controller
         $customerData = $request->validated();
         $customerData['updated_by'] = $request->user()->id;
         $customerData['status'] = $customerData['status'] ? CustomerStatus::Active->value : CustomerStatus::Disabled->value;
-        $shippingData = $customerData['shippingAddress'];
+        $shippingData = $customerData['address'];
         $billingData = $customerData['billingAddress'];
 
         DB::beginTransaction();
         try {
             $customer->update($customerData);
 
-            if ($customer->shippingAddress) {
-                $customer->shippingAddress->update($shippingData);
+            if ($customer->address) {
+                $customer->address->update($shippingData);
             } else {
-                $shippingData['customer_id'] = $customer->user_id;
-                $shippingData['type'] = AddressType::Shipping->value;
+                $shippingData['user_id'] = $customer->user_id;
                 CustomerAddress::create($shippingData);
             }
 
             if ($customer->billingAddress) {
                 $customer->billingAddress->update($billingData);
             } else {
-                $billingData['customer_id'] = $customer->user_id;
-                $billingData['type'] = AddressType::Billing->value;
+                $billingData['user_id'] = $customer->user_id;
                 CustomerAddress::create($billingData);
             }
         } catch (\Exception $e) {

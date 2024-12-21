@@ -58,7 +58,7 @@ class DashboardController extends Controller
         $query = Order::query()
             ->select(['c.name', DB::raw('count(orders.id) as count')])
             ->join('users', 'created_by', '=', 'users.id')
-            ->join('customer_addresses AS a', 'users.id', '=', 'a.customer_id')
+            ->join('customer_addresses AS a', 'users.id', '=', 'a.user_id')
             ->join('countries AS c', 'a.country_code', '=', 'c.code')
             ->where('status', OrderStatus::Paid->value)
             ->where('a.type', AddressType::Billing->value)
@@ -75,7 +75,7 @@ class DashboardController extends Controller
     public function latestCustomers()
     {
         return Customer::query()
-            ->select(['id', 'first_name', 'last_name', 'u.email', 'phone', 'u.created_at'])
+            ->select(['id', 'name', 'last_name', 'u.email', 'phone', 'u.created_at'])
             ->join('users AS u', 'u.id', '=', 'customers.user_id')
             ->where('status', CustomerStatus::Active->value)
             ->orderBy('created_at', 'desc')
@@ -88,14 +88,14 @@ class DashboardController extends Controller
         return OrderResource::collection(
             Order::query()
                 ->select(['o.id', 'o.total_price', 'o.created_at', DB::raw('COUNT(oi.id) AS items'),
-                    'c.user_id', 'c.first_name', 'c.last_name'])
+                    'c.user_id', 'c.name', 'c.last_name'])
                 ->from('orders AS o')
                 ->join('order_items AS oi', 'oi.order_id', '=', 'o.id')
                 ->join('customers AS c', 'c.user_id', '=', 'o.created_by')
                 ->where('o.status', OrderStatus::Paid->value)
                 ->limit(10)
                 ->orderBy('o.created_at', 'desc')
-                ->groupBy('o.id', 'o.total_price', 'o.created_at', 'c.user_id', 'c.first_name', 'c.last_name')
+                ->groupBy('o.id', 'o.total_price', 'o.created_at', 'c.user_id', 'c.name', 'c.last_name')
                 ->get()
         );
     }

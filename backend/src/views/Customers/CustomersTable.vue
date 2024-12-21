@@ -66,7 +66,7 @@
       <tr v-for="(customer, index) of customers.data">
         <td class="border-b p-2 ">{{ customer.id }}</td>
         <td class="border-b p-2 ">
-         {{ customer.first_name }} {{ customer.last_name }}
+         {{ customer.name }} {{ customer.last_name }}
         </td>
         <td class="border-b p-2 max-w-[200px] whitespace-nowrap overflow-hidden text-ellipsis">
           {{ customer.email }}

@@ -19,7 +19,7 @@ class OrderResource extends JsonResource
     public function toArray($request)
     {
         $customer = $this->user->customer;
-        $shipping = $customer->shippingAddress;
+        $shipping = $customer->address;
         $billing = $customer->billingAddress;
 
         return [
@@ -40,13 +40,12 @@ class OrderResource extends JsonResource
             'customer' => [
                 'id' => $this->user->id,
                 'email' => $this->user->email,
-                'first_name' => $customer->first_name,
+                'name' => $customer->name,
                 'last_name' => $customer->last_name,
                 'phone' => $customer->phone,
-                'shippingAddress' => [
+                'address' => [
                     'id' => $shipping->id,
-                    'address1' => $shipping->address1,
-                    'address2' => $shipping->address2,
+                    'address' => $shipping->address,
                     'city' => $shipping->city,
                     'state' => $shipping->state,
                     'zipcode' => $shipping->zipcode,
@@ -54,8 +53,7 @@ class OrderResource extends JsonResource
                 ],
                 'billingAddress' => [
                     'id' => $billing->id,
-                    'address1' => $billing->address1,
-                    'address2' => $billing->address2,
+                    'address' => $billing->address,
                     'city' => $billing->city,
                     'state' => $billing->state,
                     'zipcode' => $billing->zipcode,

@@ -60,7 +60,7 @@
       <tr v-for="(order, index) of orders.data">
         <td class="border-b p-2 ">{{ order.id }}</td>
         <td class="border-b p-2 ">
-          {{ order.customer.first_name }} {{ order.customer.last_name }}
+          {{ order.customer.name }} {{ order.customer.last_name }}
         </td>
         <td class="border-b p-2 ">
           <OrderStatus :order="order" />

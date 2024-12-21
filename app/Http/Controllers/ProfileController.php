@@ -18,59 +18,49 @@ class ProfileController extends Controller
     public function view(Request $request)
     {
         /** @var \App\Models\User $user */
-        $user = $request->user();
         /** @var \App\Models\Customer $customer */
+        /** @var \App\Models\CustomerAddress $address */
+        $user = $request->user();
         $customer = $user->customer;
-        $shippingAddress = $customer->shippingAddress ?: new CustomerAddress(['type' => AddressType::Shipping]);
-        $billingAddress = $customer->billingAddress ?: new CustomerAddress(['type' => AddressType::Billing]);
-//        dd($customer, $shippingAddress->attributesToArray(), $billingAddress, $billingAddress->customer);
-        $countries = Country::query()->orderBy('name')->get();
+        $address = $user->customerAddress;// ?: new CustomerAddress();
 
-        return view('profile.view', compact('customer', 'user', 'shippingAddress', 'billingAddress', 'countries'));
+        return view('profile.view', compact('customer', 'address', 'user'));
     }
-
     public function store(ProfileRequest $request)
     {
+        // Get validated data as an array
         $customerData = $request->validated();
-        $shippingData = $customerData['shipping'];
-        $billingData = $customerData['billing'];
 
         /** @var \App\Models\User $user */
         $user = $request->user();
+
         /** @var \App\Models\Customer $customer */
         $customer = $user->customer;
 
         DB::beginTransaction();
         try {
-            $customer->update($customerData);
+            // Update user data
+            $user->update([
+                'name' => $customerData['name'],
+                'email' => $customerData['email'],
+                'phone' => $customerData['phone']
+            ]);
 
-            if ($customer->shippingAddress) {
-                $customer->shippingAddress->update($shippingData);
-            } else {
-                $shippingData['customer_id'] = $customer->user_id;
-                $shippingData['type'] = AddressType::Shipping->value;
-                CustomerAddress::create($shippingData);
-            }
-            if ($customer->billingAddress) {
-                $customer->billingAddress->update($billingData);
-            } else {
-                $billingData['customer_id'] = $customer->user_id;
-                $billingData['type'] = AddressType::Billing->value;
-                CustomerAddress::create($billingData);
-            }
+            // Update or create customer address
+            CustomerAddress::updateOrCreate(
+                ['user_id' => $user->id],
+                ['address' => $customerData['address']]
+            );
+
+            DB::commit();
+
+            $request->session()->flash('flash_message', 'Profile was successfully updated.');
+            return redirect()->route('profile');
         } catch (\Exception $e) {
             DB::rollBack();
-
-            Log::critical(__METHOD__ . ' method does not work. '. $e->getMessage());
+            Log::critical(__METHOD__ . ' method does not work. ' . $e->getMessage());
             throw $e;
         }
-
-        DB::commit();
-
-        $request->session()->flash('flash_message', 'Profile was successfully updated.');
-
-        return redirect()->route('profile');
-
     }
 
     public function passwordUpdate(PasswordUpdateRequest $request)

@@ -41,9 +41,6 @@ class RegisteredUserController extends Controller
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
             'password' => 'required|string',
-            // 'name' => ['required', 'string', 'max:255'],
-            // 'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
-            // 'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
         DB::beginTransaction();
@@ -60,11 +57,11 @@ class RegisteredUserController extends Controller
             $customer = new Customer();
             $names = explode(" ", $user->name);
             $customer->user_id = $user->id;
-            $customer->first_name = $names[0];
+            $customer->name = $names[0];
             $customer->last_name = $names[1] ?? '';
             $customer->save();
 
-            Auth::login($user);
+            // Auth::login($user);
         // } catch (\Exception $e) {
         //     DB::rollBack();
         //     return redirect()->back()->withInput()->with('error', 'Unable to register right now.');

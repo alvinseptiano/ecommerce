@@ -60,7 +60,7 @@
             created {{ o.created_at }}. {{ o.items }} items
           </p>
           <p class="flex justify-between">
-            <span>{{ o.first_name }} {{ o.last_name }}</span>
+            <span>{{ o.name }} {{ o.last_name }}</span>
             <span>{{ $filters.currencyUSD(o.total_price) }}</span>
           </p>
         </div>
@@ -83,7 +83,7 @@
             <UserIcon class="w-5"/>
           </div>
           <div>
-            <h3>{{ c.first_name }} {{ c.last_name }}</h3>
+            <h3>{{ c.name }} {{ c.last_name }}</h3>
             <p>{{ c.email }}</p>
           </div>
         </router-link>

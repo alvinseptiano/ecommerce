@@ -13,7 +13,7 @@ class Customer extends Model
 
     protected $primaryKey = 'user_id';
 
-    protected $fillable = ['first_name', 'last_name', 'phone', 'status',];
+    protected $fillable = ['name', 'phone', 'status',];
 
     public function user()
     {
@@ -22,12 +22,12 @@ class Customer extends Model
 
     private function _getAddresses(): HasOne
     {
-        return $this->hasOne(CustomerAddress::class, 'customer_id', 'user_id');
+        return $this->hasOne(CustomerAddress::class, 'user_id', 'user_id');
     }
 
-    public function shippingAddress(): HasOne
+    public function address(): HasOne
     {
-        return $this->_getAddresses()->where('type', '=', AddressType::Shipping->value);
+        return $this->_getAddresses();//->where('type', '=', AddressType::Shipping->value);
     }
 
     public function billingAddress(): HasOne

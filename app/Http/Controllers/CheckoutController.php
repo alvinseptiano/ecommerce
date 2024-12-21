@@ -25,11 +25,11 @@ class CheckoutController extends Controller
         $user = $request->user();
 
         $customer = $user->customer;
-        if (!$customer->billingAddress || !$customer->shippingAddress) {
+        if (!$customer->address) {
             return redirect()->route('profile')->with('error', 'Please provide your address details first.');
         }
 
-        \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
+        // \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
         [$products, $cartItems] = Cart::getProductsAndCartItems();
 
@@ -110,7 +110,6 @@ class CheckoutController extends Controller
                 'order_id' => $order->id,
                 'amount' => $totalPrice,
                 'status' => PaymentStatus::Pending,
-                'type' => 'cc',
                 'created_by' => $user->id,
                 'updated_by' => $user->id,
                 'session_id' => $session->id
@@ -134,7 +133,7 @@ class CheckoutController extends Controller
     {
         /** @var \App\Models\User $user */
         $user = $request->user();
-        \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
+        // \Stripe\Stripe::setApiKey(getenv('STRIPE_SECRET_KEY'));
 
         try {
             $session_id = $request->get('session_id');

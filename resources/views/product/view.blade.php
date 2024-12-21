@@ -38,7 +38,7 @@
                                 x-show="activeImage === image"
                                 class="w-full h-[240px] sm:h-[400px] flex items-center justify-center"
                             >
-                                <img :src="image" alt="" class="w-auto h-10 max-h-full mx-auto"/>
+                                <img :src="image" alt="" class="w-auto h-90 max-h-full mx-auto rounded-xl"/>
                             </div>
                         </template>
                         <a
@@ -84,10 +84,10 @@
                         <template x-for="image in images">
                             <a
                                 @click.prevent="activeImage = image"
-                                class="cursor-pointer w-[80px] h-[80px] border border-gray-300 hover:border-purple-500 flex items-center justify-center"
+                                class="cursor-pointer w-[80px] h-[80px] hover:border-purple-500 flex items-center justify-center"
                                 :class="{'border-purple-600': activeImage === image}"
                             >
-                                <img :src="image" alt="" class="w-auto max-auto max-h-full"/>
+                                <img :src="image" alt="" class="object-fill w-full h-full"/>
                             </a>
                         </template>
                     </div>
@@ -113,29 +113,15 @@
                         x-ref="quantityEl"
                         value="1"
                         min="1"
-                        class="w-32 focus:border-purple-500 focus:outline-none rounded"
+                        class="input input-bordered w-32 focus:border-purple-500 focus:outline-none rounded"
                     />
                 </div>
                 <button
                     :disabled="product.quantity === 0"
                     @click="addToCart($refs.quantityEl.value)"
-                    class="btn-primary py-4 text-lg h-20 justify-center min-w-0 w-full mb-6"
+                    class="btn btn-outline rounded-full py-4 text-lg h-20 justify-center min-w-0 w-full mb-6"
                     :class="product.quantity === 0 ? 'cursor-not-allowed' : 'cursor-pointer'"
                 >
-                    <svg
-                        xmlns="http://www.w3.org/2000/svg"
-                        class="h-6 w-6 mr-2"
-                        fill="none"
-                        viewBox="0 0 24 24"
-                        stroke="currentColor"
-                        stroke-width="2"
-                    >
-                        <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"
-                        />
-                    </svg>
                     Add to Cart
                 </button>
                 <div class="mb-6" x-data="{expanded: false}">
